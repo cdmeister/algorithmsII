@@ -70,7 +70,7 @@ void bottom_up_merge_sort(int list[], int lo,int hi){
 
   // Loop through the lengths 1,2,4,8,...
   // len = 1 means that we merge two single elemtents
-  // len = 2 means that we merge two 2-by-2 arrays.
+  // len = 2 means that we merge two 2  arrays with len of 2.
   for(len=1; len <  n;len<<=1){
     printf("len: %d\n",len);
     for(lo=0; lo < n-1  ;lo+= 2*len){
