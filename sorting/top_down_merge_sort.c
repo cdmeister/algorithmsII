@@ -18,6 +18,20 @@ void exchange(int list[], int a, int min){
 
 }
 
+/*
+void mergeAB(Item c[], Item a[], int size_a, Item b[], int size_b) {
+ for (int i = 0, j = 0, k = 0; k < size_a + size_b; k++) {
+ if (i == size_a)
+ c[k] = b[j++];
+ else if (j == size_b)
+ c[k] = a[i++];
+ else
+ c[k] = (a[i] <= b[j]) ? a[i++] : b[j++];
+ }
+}
+*/
+
+
 // Merge function to actually sort the array
 // create auxilliary array to store value
 // temporary
