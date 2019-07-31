@@ -1,6 +1,8 @@
 #include "stdio.h"
 #include "math.h"
 
+// https://stackoverflow.com/questions/28068986/quicksort-pivot-position-after-one-partition
+
 int num_swaps1 =0;
 int num_swaps2 =0;
 
