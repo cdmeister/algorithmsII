@@ -1,17 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "heap.h"
 
 // Useful SO post about using 0 index heap and its formula
 // https://stackoverflow.com/questions/22900388/why-in-a-heap-implemented-by-array-the-index-0-is-left-unused
-
-struct binary_heap{
-int * array;
-  int num;
-  int iterator;
-int (*comparator)(struct binary_heap *,int,int);
-void (*swap)(struct binary_heap *,int,int);
-};
-void printHeap(struct binary_heap * heap);
 
 void swap(struct binary_heap * heap, int node1, int node2){
 
@@ -68,6 +60,15 @@ void insertHeap(struct binary_heap * heap, int k){
 
 }
 
+// Just insert into array and do not call swim.
+// Primarily to demonstrate heapsort
+void forcedInsertHeap(struct binary_heap * heap, int k){
+  printf("inserting %d\n",k);
+  heap->array[heap->iterator]=k;
+  heap->iterator++;
+
+}
+
 int removeHeap(struct binary_heap * heap){
   int root = heap->array[0];
   heap->swap(heap,0,--heap->iterator);
@@ -78,11 +79,11 @@ return root;
 
 struct binary_heap * initHeap(int size, int (*comparator)(struct binary_heap *,int,int)){
 
-struct  binary_heap *heap = malloc(sizeof(struct binary_heap));
+  struct  binary_heap *heap = malloc(sizeof(struct binary_heap));
   heap->num = size;
   heap->iterator = 0;
-heap->array = calloc(heap->num,sizeof(int));
-heap->comparator = comparator;
+  heap->array = calloc(heap->num,sizeof(int));
+  heap->comparator = comparator;
   heap->swap = &swap;
 
   return heap;
@@ -98,10 +99,21 @@ void printHeap(struct binary_heap * heap){
 
 }
 
+void printFullHeap(struct binary_heap * heap){
+
+   int i;
+   for(i=0;i<heap->num;i++){
+     printf("%d\t",heap->array[i]);
+   }
+   printf("\n");
+
+}
+
+/*
 int main(void){
 
   // Max heap
-struct  binary_heap *heap1 = initHeap(16,&heapMax);
+  struct  binary_heap *heap1 = initHeap(16,&heapMax);
   insertHeap(heap1,9);
   insertHeap(heap1,5);
   insertHeap(heap1,12);
@@ -149,3 +161,4 @@ struct  binary_heap *heap1 = initHeap(16,&heapMax);
 
   return 0;
 }
+*/
