@@ -10,13 +10,23 @@ void heapsort(struct binary_heap * heap);
 void heapsort(struct binary_heap * heap){
 
   heapify(heap);
+
+  // We need to save off the iterator becuase sink()
+  // uses the iterator when looping and we need to modify the
+  // iterator so it points to the location we want for heapsort to work.
   int orig_iterator=heap->iterator;
+  // Decrement the iterator since it points to one past the end so
+  // now it points at the last element
   --heap->iterator;
   while(heap->iterator>0){
+    // swap the root with the last element
     heap->swap(heap,heap->iterator,0);
+    // decrement iterator
     --heap->iterator;
+    // sink the root down the heap to proper location
     sink(heap,0);
   }
+  // restore our iterator back to its former glory
   heap->iterator=orig_iterator;
 
 }
