@@ -38,7 +38,7 @@ char * get(struct symbol_table * st, int key);
 void delete(struct symbol_table *st, int key);
 
 // is there a value paired with key?
-int contains(int key);
+int contains(struct symbol_table * st, int key);
 
 // is the table empty?
 int isEmpty(struct symbol_table * st);

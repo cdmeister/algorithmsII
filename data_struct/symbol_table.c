@@ -48,12 +48,22 @@ char * get(struct symbol_table * st,int key){
     if(it_node->key == key) return (char *) it_node->value;
     it_node = it_node->next;
   }
-  return "ERROR";
+  return NULL;
 }
 
 int size(struct symbol_table * st){
   return st->size;
 }
+
+int contains(struct symbol_table * st, int key){
+  return get(st,key) == NULL ? 0 : 1;
+}
+
+int isEmpty(struct symbol_table * st){
+  return st->size == 0 ? 1 : 0;
+}
+
+
 
 void delete(struct symbol_table * st, int key){
   // 3 cases:
