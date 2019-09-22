@@ -2,27 +2,28 @@
 
 struct symbol_table * ST(){
 
-  struct symbol_table * temp = malloc(sizeof(struct symbol_table));
+  struct symbol_table * temp =(struct symbol_table *) malloc(sizeof(struct symbol_table));
   temp->size=0;
   temp->head= NULL;
   temp->tail= NULL;
   return temp;
 }
 
-void put(struct symbol_table * st, int key, char * value){
+void put(struct symbol_table * st, char * key, int value){
 
   struct node * it_node = st->head;
   while(it_node != NULL){
-    if(key == it_node->key){
-      printf("match %d\n",key);
-      it_node->value = (void *) value;
+    if(!strcmp(it_node->key,key)){
+      //printf("match %s\n",key);
+      it_node->value = value;
       return;
     }
     it_node=it_node->next;
   }
   struct node * new_node = (struct node *) malloc(sizeof(struct node));
-  new_node->key = key;
-  new_node->value = (void *) value;
+  new_node->key = (char *) malloc(sizeof(char) * MAX_NUM_CHAR);
+  strcpy(new_node->key,key);
+  new_node->value = value;
   // If you have empty linked list only for the first node
   // Set the head ptr to the first node
   if(st->head == NULL){
@@ -41,11 +42,11 @@ void put(struct symbol_table * st, int key, char * value){
   st->size++;
 }
 
-char * get(struct symbol_table * st,int key){
+int * get(struct symbol_table * st,char * key){
 
   struct node * it_node = st->head;
   while (it_node != NULL){
-    if(it_node->key == key) return (char *) it_node->value;
+    if(!strcmp(it_node->key,key)) return &it_node->value;
     it_node = it_node->next;
   }
   return NULL;
@@ -55,7 +56,7 @@ int size(struct symbol_table * st){
   return st->size;
 }
 
-int contains(struct symbol_table * st, int key){
+int contains(struct symbol_table * st, char * key){
   return get(st,key) == NULL ? 0 : 1;
 }
 
@@ -65,14 +66,14 @@ int isEmpty(struct symbol_table * st){
 
 
 
-void delete(struct symbol_table * st, int key){
+void delete_st(struct symbol_table * st, char * key){
   // 3 cases:
   //  1. Key is the head of the linked list
   //  2. Key is the tail of the linked list
   //  3. Key is neither of the two
   struct node * it_node = st->head;
   while (it_node != NULL){
-    if(it_node->key == key){
+    if(!strcmp(it_node->key,key)){
       if(it_node == st->head){
         st->head = st->head->next;
       }
@@ -94,44 +95,55 @@ void delete(struct symbol_table * st, int key){
   return;
 }
 
-void * keys(struct symbol_table * st){
+char ** keys(struct symbol_table * st){
 
-  int * key_it = malloc(st->size*sizeof(int));
+  char ** key_it = (char **)malloc(st->size*sizeof(char *));
   struct node * it_node = st->head;
   int i;
   for(i=0;i<st->size;i++){
-    key_it[i]=it_node->key;
+    key_it[i] = (char *)malloc(MAX_NUM_CHAR*sizeof(char));
+    strcpy(key_it[i],it_node->key);
     it_node=it_node->next;
   }
-  return (void *) key_it;
+  return key_it;
 }
 
+void cleanup_keys(struct symbol_table * st, char ** keys){
+  //printf("cleaning up\n");
+  int i;
+  for(i=0;i<st->size;i++){
+    free(keys[i]);
+  }
+  free(keys);
+  keys=NULL;
+
+}
 void printLL(struct symbol_table * st){
   struct node * it_node = st->head;
   while(it_node != NULL){
-    printf("Key: %d\tValue: %s\n",it_node->key,(char *)it_node->value);
+    printf("Key: %s\tValue: %d\n",it_node->key,it_node->value);
     it_node = it_node->next;
   }
   printf("size: %llu\n",st->size);
 }
-
+/*
 int main(void){
   struct symbol_table * test = ST();
-  put(test,3,"YOLO");
-  put(test,4,"POOO");
-  put(test,5,"FOO");
+  put(test,"YOLO",3);
+  put(test,"POOO",4);
+  put(test,"FOO", 5);
   printLL(test);
-  int * key =(int *) keys(test);
+  char ** key =keys(test);
   int i;
   for(i=0;i<test->size;i++){
-    printf("Keys: %d\t",key[i]);
+    printf("Keys: %s\t",key[i]);
   }
-  free(key);
   printf("\n");
-  delete(test,4);
+  cleanup_keys(test, key);
+  delete_st(test,"YOLO");
   printLL(test);
   return 0;
 }
 
-
+*/
 

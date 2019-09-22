@@ -2,7 +2,7 @@
 #include "string.h"
 #include "stdlib.h"
 
-#define MAX_NUM_CHAR 15
+#define MAX_NUM_CHAR 1024
 
 // Sequential Symbol Table using linked list
 // No duplicates
@@ -10,8 +10,8 @@
 // No key assosiated with NULL
 
 struct node {
-  int key;
-  void * value;
+  char * key;
+  int  value;
   struct node * next;
   struct node * prev;
 };
@@ -28,17 +28,17 @@ struct symbol_table * ST();
 
 // put key-value pair into the table
 // ( remove key from table if value is null)
-void put(struct symbol_table * st,int key, char * value);
+void put(struct symbol_table * st,char* key, int value);
 
 // Value paired with key
-// (null if key is absent)
-char * get(struct symbol_table * st, int key);
+// (NULL if key is absent)
+int * get(struct symbol_table * st, char * key);
 
 // remove key(and its value) from table
-void delete(struct symbol_table *st, int key);
+void delete_st(struct symbol_table *st, char * key);
 
 // is there a value paired with key?
-int contains(struct symbol_table * st, int key);
+int contains(struct symbol_table * st, char * key);
 
 // is the table empty?
 int isEmpty(struct symbol_table * st);
@@ -49,7 +49,8 @@ int size(struct symbol_table * st);
 // Idea is to return a iterator that will allow one to iterate through all keys
 // but we will return a dynamically allocated array of all keys and
 // programmer will have to free memory when done.
-void * keys(struct symbol_table * st);
+char ** keys(struct symbol_table * st);
+void cleanup_keys(struct symbol_table * st, char ** keys);
 
 // Print Link List
 void printLL(struct symbol_table * st);
