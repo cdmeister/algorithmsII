@@ -1,3 +1,6 @@
+#ifndef SYMBOL_TABLE_LL
+#define SYMBOL_TABLE_LL
+
 #include "stdio.h"
 #include "string.h"
 #include "stdlib.h"
@@ -56,3 +59,4 @@ void cleanup_keys(struct symbol_table * st, char ** keys);
 void printLL(struct symbol_table * st);
 
 struct node * createNode();
+#endif
