@@ -8,120 +8,72 @@ struct symbol_table_bs * ST(){
   // set the initial capcacity as 1024
   temp->capacity = 1024;
 
-  temp->key = (char **) malloc(temp->capacity*sizeof(char *));
+  temp->keys = (char **) malloc(temp->capacity*sizeof(char *));
+  int i;
+  for(int i = 0;i<temp->capacity;i++){
+    temp->keys[i] = NULL;
+  }
   temp->values = (int *) malloc(temp->capacity*sizeof(int));
   return temp;
 }
 
-void put(struct symbol_table_bs * st, char * key, int value){
-  // Search for the key
-  // Update if found
-  // grow table if needed
+// number of keys less than key
+int rank(struct symbol_table_bs * st, char * key){
 
-}
+  int lo = 0, hi = st->size-1;
+  while(lo<=hi){
+    int mid = lo + (hi - lo)/2;
+    int cmp = strcmp(key,st->keys[mid]);
+    if( cmp > 0) lo = mid +1;
+    else if(cmp < 0) hi = mid - 1;
+    else return mid;
 
-int * get(struct symbol_table_bs * st,char * key){
-
-  struct node * it_node = st->head;
-  while (it_node != NULL){
-    if(!strcmp(it_node->key,key)) return &it_node->value;
-    it_node = it_node->next;
   }
-  return NULL;
+  return lo;
 }
 
-int size(struct symbol_table_bs * st){
-  return st->size;
-}
+// put key-value pair into the table
+void put(struct symbol_table_bs * st,char* key, int value){
 
-int contains(struct symbol_table_bs * st, char * key){
-  return get(st,key) == NULL ? 0 : 1;
-}
-
-int isEmpty(struct symbol_table_bs * st){
-  return st->size == 0 ? 1 : 0;
-}
-
-
-
-void delete_st(struct symbol_table_bs * st, char * key){
-  // 3 cases:
-  //  1. Key is the head of the linked list
-  //  2. Key is the tail of the linked list
-  //  3. Key is neither of the two
-  struct node * it_node = st->head;
-  while (it_node != NULL){
-    if(!strcmp(it_node->key,key)){
-      if(it_node == st->head){
-        st->head = st->head->next;
-      }
-      else if(it_node == st->tail){
-        st->tail = st->tail->prev;
-      }
-      else{
-        struct node * prev_node = it_node->prev;
-        struct node * next_node = it_node->next;
-        prev_node->next = next_node;
-        next_node->prev = prev_node;
-      }
-      free(it_node);
-      st->size--;
-      return;
-    }
-    it_node= it_node->next;
+  // rank() searches for the key if found
+  // if not found then rank will tell us where to put it
+  int i = rank(st,key);
+  if( i<st->size && strcmp(st->keys[i],key) == 0){
+    st->values[i] = value;
+    return;
   }
-  return;
+  st->keys[st->size]=(char *) malloc(MAX_NUM_CHAR * sizeof(char));
+  int j;
+  for(j = st->size;j>i;j--){
+    strcpy(st->keys[j],st->keys[j-1]);
+    st->values[j] = st->values[j-1];
+  }
+  strcpy(st->keys[i],key);
+  st->values[i] = value;
+  ++st->size;
 }
 
-char ** keys(struct symbol_table_bs * st){
+// Value paired with key
+// (NULL if key is absent)
+//int * get(struct symbol_table_bs * st, char * key);
 
-  char ** key_it = (char **)malloc(st->size*sizeof(char *));
-  struct node * it_node = st->head;
+void printBS(struct symbol_table_bs * st){
   int i;
   for(i=0;i<st->size;i++){
-    key_it[i] = (char *)malloc(MAX_NUM_CHAR*sizeof(char));
-    strcpy(key_it[i],it_node->key);
-    it_node=it_node->next;
+    printf("Key: %s\tValue: %d\n",st->keys[i],st->values[i]);
   }
-  return key_it;
 }
 
-void cleanup_keys(struct symbol_table_bs * st, char ** keys){
-  //printf("cleaning up\n");
-  int i;
-  for(i=0;i<st->size;i++){
-    free(keys[i]);
-  }
-  free(keys);
-  keys=NULL;
 
-}
-void printLL(struct symbol_table_bs * st){
-  struct node * it_node = st->head;
-  while(it_node != NULL){
-    printf("Key: %s\tValue: %d\n",it_node->key,it_node->value);
-    it_node = it_node->next;
-  }
-  printf("size: %llu\n",st->size);
-}
-/*
 int main(void){
   struct symbol_table_bs * test = ST();
   put(test,"YOLO",3);
   put(test,"POOO",4);
   put(test,"FOO", 5);
-  printLL(test);
-  char ** key =keys(test);
-  int i;
-  for(i=0;i<test->size;i++){
-    printf("Keys: %s\t",key[i]);
-  }
-  printf("\n");
-  cleanup_keys(test, key);
-  delete_st(test,"YOLO");
-  printLL(test);
+  put(test,"APPLE", 5);
+  put(test,"WWWAZ",3);
+  printBS(test);
   return 0;
 }
 
-*/
 

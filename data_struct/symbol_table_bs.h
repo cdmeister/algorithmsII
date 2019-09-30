@@ -16,7 +16,7 @@ struct symbol_table_bs {
   char ** keys;
   int * values;
   unsigned long long size;
-  unsigned long long cpacity;
+  unsigned long long capacity;
 
 };
 
@@ -41,13 +41,13 @@ int contains(struct symbol_table_bs * st, char * key);
 int isEmpty(struct symbol_table_bs * st);
 
 // smallest key
-char * min(struct symbol_table_bs * st);
+char * min_bs(struct symbol_table_bs * st);
 
 // largest key
-char * max(struct symbol_table_bs * st);
+char * max_bs(struct symbol_table_bs * st);
 
 // largest key less than or equal to the key
-char * floor(struct symbol_table_bs * st, char * key);
+char * floor_bs(struct symbol_table_bs * st, char * key);
 
 // smallest key greater than or equal to key
 char * ceiling(struct symbol_table_bs * st, char * key);
@@ -56,7 +56,7 @@ char * ceiling(struct symbol_table_bs * st, char * key);
 int rank(struct symbol_table_bs * st, char * key);
 
 // key of rank k
-char * select(struct symbol_table_bs * st, int k);
+char * select_bs(struct symbol_table_bs * st, int k);
 
 // delete smallest key
 void deleteMin(struct symbol_table_bs * st);

@@ -92,5 +92,8 @@ dkms.conf
 **/build
 *.swp
 *.swo
+leipzig1M.txt
+tale.txt
+tinyTale.txt
 
 # End of https://www.gitignore.io/api/c,c++,linux
