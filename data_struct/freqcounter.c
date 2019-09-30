@@ -1,4 +1,5 @@
-#include "symbol_table.h"
+//#include "symbol_table.h"
+#include "symbol_table_bs.h"
 
 // This ST client counts the frequecy of occurence of the strings in standard
 // input, then prints out that occurs with highest frequency. The command-line,
@@ -31,7 +32,7 @@ int main(int argc, char ** argv){
       pch = strtok (NULL, " \t\n");
     }
   }
-  //printLL(st);
+  //printST(st);
 
   free(line);
   char ** key_it = keys(st);

@@ -118,7 +118,7 @@ void cleanup_keys(struct symbol_table * st, char ** keys){
   keys=NULL;
 
 }
-void printLL(struct symbol_table * st){
+void printST(struct symbol_table * st){
   struct node * it_node = st->head;
   while(it_node != NULL){
     printf("Key: %s\tValue: %d\n",it_node->key,it_node->value);
@@ -132,7 +132,7 @@ int main(void){
   put(test,"YOLO",3);
   put(test,"POOO",4);
   put(test,"FOO", 5);
-  printLL(test);
+  printST(test);
   char ** key =keys(test);
   int i;
   for(i=0;i<test->size;i++){
@@ -141,7 +141,7 @@ int main(void){
   printf("\n");
   cleanup_keys(test, key);
   delete_st(test,"YOLO");
-  printLL(test);
+  printST(test);
   return 0;
 }
 

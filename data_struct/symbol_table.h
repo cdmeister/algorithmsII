@@ -56,7 +56,7 @@ char ** keys(struct symbol_table * st);
 void cleanup_keys(struct symbol_table * st, char ** keys);
 
 // Print Link List
-void printLL(struct symbol_table * st);
+void printST(struct symbol_table * st);
 
 struct node * createNode();
 #endif
