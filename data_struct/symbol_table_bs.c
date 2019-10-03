@@ -63,6 +63,18 @@ void put(struct symbol_table * st,char* key, int value){
   ++st->size;
 }
 
+char * delete_st(struct symbol_table * st, char * key){
+
+  int i = rank(st,key);
+  int j;
+  for(j =i;j<size(st)-1;j++){
+    strcpy(st->keys[j],st->keys[j+1]);
+    st->values[j] = st->values[j+1];
+  }
+  st->size--;
+
+}
+
 int size(struct symbol_table * st){
   return st->size;
 }
@@ -127,7 +139,7 @@ void cleanup_keys(struct symbol_table * st, char ** keys){
   free(keys);
   keys=NULL;
 }
-/*
+
 int main(void){
   struct symbol_table * test = ST();
   put(test,"YOLO",3);
@@ -138,7 +150,10 @@ int main(void){
   put(test,"POOO",99);
   put(test,"FAO", 1234);
   printST(test);
+  printf("--------Delete------\n");
+  delete_st(test,"FOO");
+  printST(test);
   return 0;
 }
 
-*/
+

@@ -32,7 +32,7 @@ void put(struct symbol_table * st,char* key, int value);
 int * get(struct symbol_table * st, char * key);
 
 // remove key(and its value) from table
-void delete_st(struct symbol_table *st, char * key);
+char * delete_st(struct symbol_table *st, char * key);
 
 // is there a value paired with key?
 int contains(struct symbol_table * st, char * key);
