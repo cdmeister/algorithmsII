@@ -24,8 +24,9 @@ int rank(struct symbol_table * st, char * key){
   while(lo<=hi){
     int mid = lo + (hi - lo)/2;
     int cmp = strcmp(key,st->keys[mid]);
-    if( cmp > 0) lo = mid +1;
-    else if(cmp < 0) hi = mid - 1;
+    printf("Mid: %d \t cmp: %d \t key:%s\tarray: %s \n",mid,cmp,key,st->keys[mid]);
+    if( cmp > 0) lo = mid +1;//upper half
+    else if(cmp < 0) hi = mid - 1;//lower half
     else return mid;
 
   }
@@ -110,6 +111,19 @@ int * get(struct symbol_table * st, char * key){
 
 }
 
+char * floor_bs(struct symbol_table * st, char * key){
+  printf("-------------\n");
+  int i = rank(st,key);
+  if(i==0){return st->keys[0];}
+  else if(i == size(st)){
+    return st->keys[i-1];
+  }
+  else{
+    return st->keys[i-1];
+  }
+
+}
+
 void printST(struct symbol_table * st){
   int i;
   for(i=0;i<st->size;i++){
@@ -153,7 +167,9 @@ int main(void){
   printf("--------Delete------\n");
   delete_st(test,"FOO");
   printST(test);
+  printf("%s\n",floor_bs(test,"AAA"));
+  printf("%s\n",floor_bs(test,"FOO"));
+  printf("%s\n",floor_bs(test,"ZZZ"));
   return 0;
 }
-
 
