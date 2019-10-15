@@ -21,7 +21,23 @@ struct node * createNode(char * key, int value, int n){
 }
 
 
-static int * getNode(struct node * x, char * key){
+struct node * createCopyNode(struct node * x){
+
+  struct node * temp = createNode(x->key,x->value,x->n);
+  temp->left_child = x->left_child;
+  temp->right_child = x->right_child;
+  temp->parent=x->parent;
+  return temp;
+
+}
+
+void print_node(struct node * x){
+  if(x == NULL){ printf("NULL Node\n"); return;}
+  printf("Key: %s\tValue:%d\n",x->key,x->value);
+}
+
+
+int * getNode(struct node * x, char * key){
 
   if(x  == NULL){
     return NULL;
@@ -31,6 +47,7 @@ static int * getNode(struct node * x, char * key){
   else if(cmp < 0) getNode(x->right_child,key);
   else return &x->value;
 
+  return NULL;
 }
 
 
@@ -44,7 +61,7 @@ int contains(struct symbol_table * st, char * key){
   return get(st,key) == NULL ? 0 : 1;
 }
 
-static void putNode(struct node ** x, char * key, int value){
+void putNode(struct node ** x, char * key, int value){
 
   if((*x)  == NULL){
     //printf("1 I am here in putNode key= %s x=%p\n",key,(void *)(*x));
@@ -95,14 +112,19 @@ int sizeNode(struct node * x){
   else return x->n;
 }
 
-static int height(struct node* node)
+int isEmpty(struct symbol_table * st){
+  return sizeNode(st->root) == 0 ? 1 : 0;
+}
+
+int height(struct node* x)
 {
-    if (node==NULL) return 0;
+    //print_node(node);
+    if (x==NULL) return 0;
     else
     {
         /* compute the height of each subtree */
-        int lheight = height(node->left_child);
-        int rheight = height(node->right_child);
+        int lheight = height(x->left_child);
+        int rheight = height(x->right_child);
 
         /* use the larger one */
         if (lheight > rheight)
@@ -112,13 +134,13 @@ static int height(struct node* node)
 }
 
 /* Print nodes at a given level */
-static void printLevel(struct node* root, int level,int save,
+void printLevel(struct node* root, int level,int save,
                         char ** key_it, unsigned long long * q)
 {
     //printf("Level: %d\n",level);
     if (root == NULL) return;
     if (level == 1) {
-     // printf("Key: %s\tValue: %d \n", root->key, root->value);
+      printf("Key: %s\tValue: %d \n", root->key, root->value);
       if(save){
         unsigned long long index = *q;
         key_it[index] = malloc(MAX_NUM_CHAR*sizeof(char));
@@ -138,10 +160,10 @@ static void printLevel(struct node* root, int level,int save,
 
 
 /* Function to print level order traversal a tree*/
-static void printLevelOrder(struct node* root, int save, char ** key_it)
+void printLevelOrder(struct node* root, int save, char ** key_it)
 {
-    int h = height(root);
-    //printf("Height of Tree: %d\n",h);
+    int h = 4;//height(root);
+    printf("Height of Tree: %d\n",h);
     int i;
     unsigned long long * q = malloc(sizeof(unsigned long long));
     *q=0;
@@ -150,7 +172,7 @@ static void printLevelOrder(struct node* root, int save, char ** key_it)
 }
 
 char ** keys(struct symbol_table * st){
-  char ** key_it = (char **) malloc(size(st)*sizeof(char *));
+  char ** key_it = (char **) malloc((long unsigned int)size(st)*sizeof(char *));
   printLevelOrder(st->root,1,key_it);
   return key_it;
 }
@@ -171,22 +193,196 @@ void cleanup_keys(struct symbol_table * st, char ** keys){
   keys=NULL;
 }
 
-/*int main(void){
+struct node *  minNode(struct node * x){
+  //print_node(x);
+  if(x->left_child == NULL) return x;
+  struct node * temp = minNode(x->left_child);
+  //printf("After\n");
+  //print_node(x);
+  //print_node(temp);
+  return temp;
+}
+
+
+char * min_bs(struct symbol_table * st){
+  return minNode(st->root)->key;
+}
+
+struct node *  maxNode(struct node * x){
+  //print_node(x);
+  if(x->right_child == NULL) return x;
+  struct node * temp = maxNode(x->right_child);
+  //printf("After\n");
+  //print_node(x);
+  //print_node(temp);
+  return temp;
+}
+
+
+char * max_bs(struct symbol_table * st){
+  return maxNode(st->root)->key;
+}
+
+struct node * floorNode(struct node * x, char * key){
+
+  if(x == NULL) return NULL;
+  //print_node(x);
+  int cmp = strcmp(key,x->key);
+  if(cmp == 0) return x;
+  if(cmp < 0) {
+   // printf("Going Left\n");
+    //print_node(x);
+    struct node * templ =floorNode(x->left_child,key);
+   // printf("After Left\n");
+  //  print_node(x);
+   // print_node(templ);
+    return templ;
+  }
+ // printf("Going Right\n");
+ // print_node(x);
+  struct node * temp = floorNode(x->right_child,key);
+//  printf("After Right\n");
+//  print_node(x);
+//  print_node(temp);
+  if(temp != NULL) return temp;
+  else return x;
+}
+
+// floor of key is the largest key in the BST less than or equal to the key
+// if you find the node then return that
+// if the key is less than the node's key, then go left
+// if the key is greater, then the floor of the key might be in the right
+//  subtree only if there is a node with a key less than the key.
+char * floor_bs(struct symbol_table * st, char * key){
+
+ // printf("Start FLoor\n");
+  struct node * temp = floorNode(st->root,key);
+  if(temp == NULL) return NULL;
+  else return temp->key;
+
+}
+
+struct node * deleteMinNode(struct node * x){
+
+  // Keep going left until left_child is null.
+  // then return right_child
+    //print_node(x);
+  if(x->left_child == NULL){
+    //struct node * right_child = x->right_child;
+    //printf("Before\n");
+    //print_node(x);
+    //print_node(right_child);
+    //free(x->key);
+    //free(x);
+    //x=NULL;
+    //printf("After\n");
+    //print_node(x);
+    //print_node(right_child);
+    return x->right_child;
+  }
+  struct node * victim = deleteMinNode(x->left_child);
+  x->left_child = victim;
+  x->n = sizeNode(x->left_child) + sizeNode(x->right_child) + 1;
+  return x;
+}
+
+void deleteMin(struct symbol_table * st){
+  if(isEmpty(st)) return;
+  deleteMinNode(st->root);
+  return;
+
+}
+
+struct node * deleteMaxNode(struct node * x){
+
+  // Keep going right until right_child is null.
+  // then return left_child
+  if(x->right_child == NULL){
+    struct node * left_child = x->left_child;
+    free(x);
+    return left_child;
+  }
+  struct node * victim = deleteMaxNode(x->right_child);
+  x->right_child = victim;
+  x->n = sizeNode(x->left_child) + sizeNode(x->right_child) + 1;
+  return x;
+}
+
+void deleteMax(struct symbol_table * st){
+  if(isEmpty(st)) return;
+  deleteMaxNode(st->root);
+  return;
+
+}
+
+struct node * deleteNode(struct node * x,char * key){
+
+  if( x == NULL) return NULL;
+  int cmp = strcmp(key, x->key);
+  if(cmp < 0)x->left_child=deleteNode(x->left_child,key);
+  else if(cmp > 0) x->right_child = deleteNode(x->right_child,key);
+  else{
+    // Case 1: if the matching node only has one child
+    if(x->left_child == NULL) return x->right_child;
+    if(x->right_child == NULL) return x->left_child;
+
+    // Case 2: if the matching node has two children
+    //struct node * t = x;
+    struct node * t = createCopyNode(x);
+    struct node * mini = minNode(t->right_child);
+    //print_node(mini);
+    x=mini;
+    //printf("Min key: ");
+    //print_node(x);
+    x->right_child = deleteMinNode(t->right_child);
+    //printf("right child: ");
+    //print_node(x->right_child);
+    x->left_child = t->left_child;
+    //printf("left child: ");
+    //print_node(x->left_child);
+    //printf("%p\n",(void *)t);
+    //printf("%p\n",(void *)x);
+    free(t);
+  }
+  x->n = sizeNode(x->left_child) + sizeNode(x->right_child) + 1;
+  //  print_node(x);
+  return x;
+}
+
+void delete_st(struct symbol_table * st,char * key){
+  if(isEmpty(st)) return;
+  st->root=deleteNode(st->root,key);
+  return;
+
+}
+
+
+
+int main(void){
   struct symbol_table * test = ST();
-  put(test,"YOLO",3);
-  put(test,"POOO",4);
-  put(test,"FOO", 5);
-  put(test,"APPLE", 5);
-  put(test,"WWWAZ",3);
-  put(test,"POOO",99);
-  put(test,"FAO", 1234);
-  printST(test);
-  printf("--------Delete------\n");
-  //delete_st(test,"FOO");
+  put(test,"S",3);
+  put(test,"X",4);
+  put(test,"E", 5);
+  put(test,"A", 5);
+  put(test,"R",3);
+  put(test,"C",99);
+  put(test,"H", 1234);
+  put(test,"M", 1234);
+
+  //printST(test);
+  //printf("%s\n",min_bs(test));
+  /*printf("%s\n",max_bs(test));
+  printf("%s\n",floor_bs(test,"G"));
+  printf("%s\n",floor_bs(test,"H"));*/
+  //deleteMin(test);
+  //delete_st(test,"E");
+  //printST(test);
+  delete_st(test,"S");
+  //deleteMax(test);
   printST(test);
   //printf("%s\n",floor_bs(test,"AAA"));
   //printf("%s\n",floor_bs(test,"FOO"));
   //printf("%s\n",floor_bs(test,"ZZZ"));
   return 0;
 }
-*/
+

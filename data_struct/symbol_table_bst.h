@@ -33,14 +33,33 @@ void put(struct symbol_table * st,char* key, int value);
 // (NULL if key is absent)
 int * get(struct symbol_table * st, char * key);
 
-// remove key(and its value) from table
-void delete_st(struct symbol_table *st, char * key);
-
 // is there a value paired with key?
 int contains(struct symbol_table * st, char * key);
 
 // is the table empty?
 int isEmpty(struct symbol_table * st);
+
+// smallest key
+char * min_bs(struct symbol_table * st);
+
+// largest key
+char * max_bs(struct symbol_table * st);
+
+// largest key less than or equal to the key
+char * floor_bs(struct symbol_table * st, char * key);
+
+// smallest key greater than or equal to key
+char * ceiling(struct symbol_table * st, char * key);
+
+// delete smallest key
+void deleteMin(struct symbol_table * st);
+
+// delete largest key
+void deleteMax(struct symbol_table * st);
+
+// remove key(and its value) from table
+void delete_st(struct symbol_table *st, char * key);
+
 
 // number of key-value pairs in the table
 int size(struct symbol_table * st);
@@ -56,6 +75,22 @@ void cleanup_keys(struct symbol_table * st, char ** keys);
 void printST(struct symbol_table * st);
 
 struct node * createNode();
+void print_node(struct node * x);
+void printLevel(struct node* root, int level,int save,
+                        char ** key_it, unsigned long long * q);
+void printLevelOrder(struct node* root, int save, char ** key_it);
+int height(struct node* x);
+int * getNode(struct node * x, char * key);
+void putNode(struct node ** x, char * key, int value);
+struct node *  minNode(struct node * x);
+struct node *  maxNode(struct node * x);
+struct node * floorNode(struct node * x, char * key);
+struct node * deleteNode(struct node * x,char * key);
+struct node * deleteMinNode(struct node * x);
+struct node * deleteMaxNode(struct node * x);
+struct node * createCopyNode(struct node * x);
+
+
 
 
 #endif
