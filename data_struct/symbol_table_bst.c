@@ -22,7 +22,7 @@ struct node * createNode(char * key, int value, int n){
 
 
 struct node * createCopyNode(struct node * x){
-
+  if(x==NULL) return NULL;
   struct node * temp = createNode(x->key,x->value,x->n);
   temp->left_child = x->left_child;
   temp->right_child = x->right_child;
@@ -268,17 +268,18 @@ struct node * deleteMinNode(struct node * x){
   // then return right_child
     //print_node(x);
   if(x->left_child == NULL){
-    //struct node * right_child = x->right_child;
+    struct node * right_child = x->right_child;
     //printf("Before\n");
     //print_node(x);
     //print_node(right_child);
-    //free(x->key);
-    //free(x);
-    //x=NULL;
+    free(x->key);
+    free(x);
+    x=NULL;
     //printf("After\n");
     //print_node(x);
     //print_node(right_child);
-    return x->right_child;
+    return right_child;
+    //return x->right_child;
   }
   struct node * victim = deleteMinNode(x->left_child);
   x->left_child = victim;
@@ -329,9 +330,10 @@ struct node * deleteNode(struct node * x,char * key){
     // Case 2: if the matching node has two children
     //struct node * t = x;
     struct node * t = createCopyNode(x);
+    free(x->key);
+    free(x);
     struct node * mini = minNode(t->right_child);
-    //print_node(mini);
-    x=mini;
+    x=createCopyNode(mini);
     //printf("Min key: ");
     //print_node(x);
     x->right_child = deleteMinNode(t->right_child);
@@ -377,8 +379,8 @@ int main(void){
   //deleteMin(test);
   //delete_st(test,"E");
   //printST(test);
-  delete_st(test,"S");
-  //deleteMax(test);
+  //delete_st(test,"S");
+  deleteMax(test);
   printST(test);
   //printf("%s\n",floor_bs(test,"AAA"));
   //printf("%s\n",floor_bs(test,"FOO"));
