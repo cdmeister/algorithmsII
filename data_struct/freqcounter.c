@@ -7,7 +7,7 @@
 // argument specifies a lower bound on the length of keys considered.
 
 int main(int argc, char ** argv){
-
+  printf("argc: %d\n",argc);
   char *line = NULL;
   size_t len = 0;
   ssize_t read;
@@ -20,7 +20,7 @@ int main(int argc, char ** argv){
     while (pch != NULL)
     {
       //printf ("%s\n",pch);
-      size_t word_length = strlen(pch);
+      int word_length =(int) strlen(pch);
       if(word_length < minlen){
         pch = strtok (NULL, " \t\n");
         continue;

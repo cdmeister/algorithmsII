@@ -43,11 +43,10 @@ int * getNode(struct node * x, char * key){
     return NULL;
   }
   int cmp = strcmp(x->key,key);
-  if (cmp > 0) getNode(x->left_child,key);
-  else if(cmp < 0) getNode(x->right_child,key);
+  if (cmp > 0) return getNode(x->left_child,key);
+  else if(cmp < 0) return getNode(x->right_child,key);
   else return &x->value;
 
-  return NULL;
 }
 
 
@@ -147,6 +146,7 @@ void printLevel(struct node* root, int level,int save,
         strcpy(key_it[index],root->key);
         index++;
         *q=index;
+        printf("index: %llu\n",index);
       }
     }
     else if (level > 1)
@@ -162,7 +162,7 @@ void printLevel(struct node* root, int level,int save,
 /* Function to print level order traversal a tree*/
 void printLevelOrder(struct node* root, int save, char ** key_it)
 {
-    int h = 4;//height(root);
+    int h = height(root);
     printf("Height of Tree: %d\n",h);
     int i;
     unsigned long long * q = malloc(sizeof(unsigned long long));
@@ -173,6 +173,7 @@ void printLevelOrder(struct node* root, int save, char ** key_it)
 
 char ** keys(struct symbol_table * st){
   char ** key_it = (char **) malloc((long unsigned int)size(st)*sizeof(char *));
+  printf("Size of st: %d\n",size(st));
   printLevelOrder(st->root,1,key_it);
   return key_it;
 }
@@ -359,7 +360,7 @@ void delete_st(struct symbol_table * st,char * key){
 }
 
 
-
+/*
 int main(void){
   struct symbol_table * test = ST();
   put(test,"S",3);
@@ -373,9 +374,9 @@ int main(void){
 
   //printST(test);
   //printf("%s\n",min_bs(test));
-  /*printf("%s\n",max_bs(test));
-  printf("%s\n",floor_bs(test,"G"));
-  printf("%s\n",floor_bs(test,"H"));*/
+  //printf("%s\n",max_bs(test));
+  //printf("%s\n",floor_bs(test,"G"));
+  //printf("%s\n",floor_bs(test,"H"));
   //deleteMin(test);
   //delete_st(test,"E");
   //printST(test);
@@ -387,4 +388,4 @@ int main(void){
   //printf("%s\n",floor_bs(test,"ZZZ"));
   return 0;
 }
-
+*/
