@@ -1,6 +1,8 @@
 //#include "symbol_table.h"
 //#include "symbol_table_bs.h"
-#include "symbol_table_bst.h"
+//#include "symbol_table_bst.h"
+#include "red_black_bst.h"
+
 
 // This ST client counts the frequecy of occurence of the strings in standard
 // input, then prints out that occurs with highest frequency. The command-line,

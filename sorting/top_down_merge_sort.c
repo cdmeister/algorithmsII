@@ -77,19 +77,22 @@ void merge(int list[], int lo,int mid,int hi){
 void top_down_merge_sort(int list[], int lo,int hi){
 
   //Base case if low>=high signifies only one element
-  printf("%s %d %d\n",__FUNCTION__,lo,hi);
-  if (lo>=hi) return;
+  printf("Entry %s %d %d\n",__FUNCTION__,lo,hi);
+  if (lo>=hi){ printf("Now returning %s %d %d\n",__FUNCTION__,lo,hi); return;}
   // Calculate mid index
   int mid = lo + (hi - lo)/2;
+  printf("Left %s %d %d %d\n",__FUNCTION__,lo,mid,hi);
 
   // Call mergesort on left half
   top_down_merge_sort(list,lo,mid);
 
   // Call mergesort on right half
+  printf("Right %s %d %d %d\n",__FUNCTION__,lo,mid,hi);
   top_down_merge_sort(list,mid+1,hi);
 
 
   // merge
+  printf("Merge %s %d %d %d\n",__FUNCTION__,lo,mid,hi);
   merge(list,lo,mid,hi);
 }
 
