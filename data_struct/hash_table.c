@@ -8,6 +8,7 @@ static void addNode(struct symbol_table * st, struct node * new_node, int index)
 struct symbol_table * ST(){
 
   struct symbol_table * temp =(struct symbol_table *) malloc(sizeof(struct symbol_table));
+  temp->size = 0;
   temp->llist = (struct linked_list *) malloc(HASH_TABLE_MAX_SIZE * sizeof(struct linked_list));
   int i;
   for(;i<HASH_TABLE_MAX_SIZE;i++){
@@ -25,17 +26,18 @@ static unsigned int hash_function(char * key){
   char * ptr = key;
   while(*ptr){
     hash += *ptr;
-    printf("Character: %c Hash: %d\n", *ptr, hash);
+    //printf("Character: %c Hash: %d\n", *ptr, hash);
     ++ptr;
   }
   hash = hash%HASH_TABLE_MAX_SIZE;
-  printf("Key: %s Hash: %d\n", key, hash);
+  //printf("Key: %s Hash: %d\n", key, hash);
   return hash;
 
 }
 
 
 static struct node * create_node(char * key, int value){
+  //printf("Creating New Node with key %s\tvalue %d\n",key,value);
   struct node * temp = (struct node * )malloc(sizeof(struct node));
   temp->key = (char *)malloc(MAX_NUM_CHAR*sizeof(char));
   strcpy(temp->key, key);
@@ -47,8 +49,26 @@ static struct node * create_node(char * key, int value){
 
 void put(struct symbol_table * st, char * key, int value){
   int index = hash_function(key);
+
+  // Check if in linked list first
+  //printf("Checking %s\n", key);
+  struct linked_list * tempList = &st->llist[index];
+  struct node * it_node = tempList->head;
+  while(it_node != NULL){
+    if(!strcmp(key,it_node->key)){
+      // if we found it update value
+      //printf("Found %s updating value to: %d\n",key,value);
+      it_node->value = value;
+      return;
+    }
+    it_node=it_node->next;
+  }
+  // Else create a new node
   struct node *  new_node = create_node(key,value);
+  //printNode(new_node);
   addNode(st,new_node,index);
+  st->size++;
+  //printf("Hash numkey: %llu\n", st->size);
   //free(new_node);
 }
 
@@ -58,6 +78,7 @@ int * get(struct symbol_table * st,char * key){
   struct node * it_node = tempList->head;
   while(it_node != NULL){
     if(!strcmp(key,it_node->key)){
+
       return &it_node->value;
     }
     it_node=it_node->next;
@@ -80,25 +101,61 @@ int isEmpty(struct symbol_table * st){
 
 
 void delete_st(struct symbol_table * st, char * key){
+  int index = hash_function(key);
+  struct linked_list * tempList = &st->llist[index];
+  struct node * it_node = tempList->head;
+    // 3 cases:
+  //  1. Key is the head of the linked list
+  //  2. Key is the tail of the linked list
+  //  3. Key is neither of the two
+  while (it_node != NULL){
+    if(!strcmp(it_node->key,key)){
+      if(it_node == tempList->head){
+        tempList->head = tempList->head->next;
+      }
+      else if(it_node == tempList->tail){
+        tempList->tail = tempList->tail->prev;
+      }
+      else{
+        struct node * prev_node = it_node->prev;
+        struct node * next_node = it_node->next;
+        prev_node->next = next_node;
+        next_node->prev = prev_node;
+      }
+      free(it_node);
+      tempList->size--;
+      st->size--;
+      return;
+    }
+    it_node= it_node->next;
+  }
+  return;
 }
 
 char ** keys(struct symbol_table * st){
-/*
+
   char ** key_it = (char **)malloc(st->size*sizeof(char *));
-  struct node * it_node = st->head;
+  //printf("Key_it address: %p\n",key_it);
   int i;
-  for(i=0;i<st->size;i++){
-    key_it[i] = (char *)malloc(MAX_NUM_CHAR*sizeof(char));
-    strcpy(key_it[i],it_node->key);
-    it_node=it_node->next;
+  int q = 0;
+  for(i=0;i < HASH_TABLE_MAX_SIZE; i++){
+    if(st->llist[i].size !=0){
+      struct linked_list * tempList = &st->llist[i];
+      struct node * it_node = tempList->head;
+      while(it_node != NULL){
+        key_it[q] = (char *) malloc(MAX_NUM_CHAR *sizeof(char));
+        strcpy(key_it[q],it_node->key);
+        //printf("Key_it[%d] = %s\n",i,key_it[q]);
+        it_node = it_node->next;
+        q++;
+      }
+    }
   }
   return key_it;
-*/
-return NULL;
 }
 
 void cleanup_keys(struct symbol_table * st, char ** keys){
-/*
+
   printf("cleaning up\n");
   int i;
   for(i=0;i<st->size;i++){
@@ -106,8 +163,9 @@ void cleanup_keys(struct symbol_table * st, char ** keys){
   }
   free(keys);
   keys=NULL;
-*/
+
 }
+
 void printST(struct symbol_table * st){
   int i;
   for(i = 0; i < HASH_TABLE_MAX_SIZE; i++){
@@ -126,8 +184,10 @@ void printST(struct symbol_table * st){
 
 
 void printNode(struct node * victim){
-  printf("Address: %p\tKey: %s\tValue: %d\n",victim,victim->key,victim->value);
+  if(victim != NULL) printf("Address: %p\tKey: %s\tValue: %d\n",victim,victim->key,victim->value);
+  else printf("Failed at finding node\n");
 }
+
 
 void addNode(struct symbol_table * st, struct node * new_node, int index){
   struct linked_list * tempList = &st->llist[index];
@@ -135,21 +195,22 @@ void addNode(struct symbol_table * st, struct node * new_node, int index){
 
     tempList->head = new_node;
     tempList->tail = new_node;
+    //printNode(tempList->tail);
     tempList->size++;
 
   }
   else {
     struct node * tail_node = tempList->tail;
     tail_node->next = new_node;
-    printNode(tail_node);
-    printNode(new_node);
+    //printNode(tail_node);
+    //printNode(new_node);
     new_node->prev = tail_node;
     tempList->tail = new_node;
     tempList->size++;
   }
   return;
 }
-
+/*
 int main(void){
   struct symbol_table * test = ST();
   put(test,"YOLO",3);
@@ -160,7 +221,7 @@ int main(void){
   printST(test);
   int * temp = get(test,"LOOY");
   printf("%d\n", *temp);
-  /*char ** key =keys(test);
+  char ** key =keys(test);
   int i;
   for(i=0;i<test->size;i++){
     printf("Keys: %s\t",key[i]);
@@ -169,8 +230,8 @@ int main(void){
   cleanup_keys(test, key);
   delete_st(test,"YOLO");
   printST(test);
-  */
   return 0;
 }
+  */
 
 

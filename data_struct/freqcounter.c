@@ -1,7 +1,8 @@
 //#include "symbol_table.h"
 //#include "symbol_table_bs.h"
 //#include "symbol_table_bst.h"
-#include "red_black_bst.h"
+//#include "red_black_bst.h"
+#include "hash_table.h"
 
 
 // This ST client counts the frequecy of occurence of the strings in standard
@@ -35,16 +36,19 @@ int main(int argc, char ** argv){
       pch = strtok (NULL, " \t\n");
     }
   }
-  //printf("Final Size: %d now printing tree\n",size(st));
+  printf("Final Size: %d now printing tree\n",size(st));
 
- // printST(st);
-  //printf("done printing tree\n");
+  //printST(st);
+  printf("done printing tree\n");
 
   free(line);
   char ** key_it = keys(st);
+  printf("Key_it address: %p\n",key_it);
   int i;
+  printf("Drifto King %s\n",key_it[0]);
   char * max = (char *) malloc(MAX_NUM_CHAR*sizeof(char));
   strcpy(max,key_it[0]);
+  printf("Max Orido %s\n",max);
   for(i = 0; i< size(st);i++){
     if(*get(st,key_it[i]) > *get(st,max)){
       strcpy(max,key_it[i]);
