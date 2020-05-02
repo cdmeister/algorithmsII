@@ -75,14 +75,25 @@ void printGraph(struct Graph * graph){
   }
 
 }
-/*
-int V(struct Graph * graph);
-int E(struct Graph * graph);
 
-struct node * adj(struct Graph * graph, int v);
+int V(struct Graph * graph){
+  return graph->numVertices;
+}
 
-char * toString(struct Graph * graph);
-*/
+int E(struct Graph * graph){
+  return graph->numEdges;
+}
+
+
+struct node * adj(struct Graph * graph, int v){
+  return graph->adjlist[v];
+}
+
+
+char * toString(struct Graph * graph){
+  return NULL;
+}
+
 
 int main(int argc, char ** argv){
 
