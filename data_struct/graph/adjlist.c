@@ -5,6 +5,7 @@ static struct node * createNode(int vertex){
   struct node * temp = (struct node * )malloc(sizeof(struct node));
   temp->vertex = vertex;
   temp->next = NULL;
+  temp->visited = 0;
   return temp;
 }
 
