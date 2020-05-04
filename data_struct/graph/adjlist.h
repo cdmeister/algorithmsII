@@ -7,13 +7,13 @@
 struct node {
   int vertex;
   struct node * next;
-  int visited;
 };
 
 struct Graph {
   int numVertices;
   int numEdges;
   struct node ** adjlist;
+  int * visited;
 };
 
 
@@ -29,4 +29,5 @@ struct node * adj(struct Graph * graph, int v);
 char * toString(struct Graph * graph);
 void printGraph(struct Graph * graph);
 
+struct node * createNode(int vertex);
 #endif /* ADJLIST_H */

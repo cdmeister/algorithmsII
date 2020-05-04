@@ -28,4 +28,5 @@ void *  pop_back(struct Deque * deque);
 
 void printDeque(struct Deque * deque);
 
+int isEmpty(struct Deque * deque);
 #endif

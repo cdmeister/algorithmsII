@@ -1,11 +1,10 @@
 #include "adjlist.h"
 
-static struct node * createNode(int vertex){
+struct node * createNode(int vertex){
   //printf("Creating New Node with key %s\tvalue %d\n",key,value);
   struct node * temp = (struct node * )malloc(sizeof(struct node));
   temp->vertex = vertex;
   temp->next = NULL;
-  temp->visited = 0;
   return temp;
 }
 
@@ -16,10 +15,12 @@ struct Graph * InitEmptyGraph(int numVertices){
   temp->numVertices = numVertices;
   temp->numEdges = 0;
   temp->adjlist = (struct node **)malloc(numVertices*sizeof(struct node *));
+  temp->visited = (int *)malloc(numVertices*sizeof(int *));
 
   int i;
   for(i=0;i<temp->numVertices;i++){
     temp->adjlist[i]=NULL;
+    temp->visited[i]=0;
   }
 
   return temp;
@@ -95,7 +96,7 @@ char * toString(struct Graph * graph){
   return NULL;
 }
 
-
+/*
 int main(int argc, char ** argv){
 
   struct Graph * graph =InitFileGraph(argv[1]);
@@ -104,3 +105,4 @@ int main(int argc, char ** argv){
 
 
 }
+*/

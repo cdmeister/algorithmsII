@@ -98,6 +98,18 @@ void *  pop_back(struct Deque * deque){
 
 }
 
+int isEmpty(struct Deque * deque){
+
+  if(deque->head == NULL && deque->tail == NULL){
+    return 1;
+  }
+  else{
+    return 0;
+  }
+
+}
+
+
 /*
 int main(int argc, char ** argv){
 
