@@ -99,7 +99,7 @@ char * toString(struct Graph * graph){
   return NULL;
 }
 
-
+/*
 int main(int argc, char ** argv){
 
   struct Graph * graph =InitFileGraph(argv[1]);
@@ -108,4 +108,4 @@ int main(int argc, char ** argv){
 
 
 }
-
+*/
