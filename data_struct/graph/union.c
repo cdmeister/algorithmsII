@@ -80,8 +80,9 @@ struct UF * InitFileUnionFind(char * filename){
   return temp;
 
 }
-
+/*
 int main(int argc, char ** argv){
   struct UF * uf = InitFileUnionFind(argv[1]);
   printUnion(uf);
 }
+*/

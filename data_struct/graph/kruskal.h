@@ -1,3 +1,6 @@
+#ifndef KRUSKAL_MST
+#define KRUSKAL_MST
+
 #include "deque.h"
 #include "edgeGraph.h"
 #include "generic_heap.h"
@@ -8,7 +11,7 @@
 struct kruskalMST {
 
   struct Graph * graph;
-  struct gheap * minHeap;
+  struct gheap * heap;
   struct Deque * deque;
   struct UF * uf;
 
@@ -21,3 +24,6 @@ int edgeMin(struct gheap * heap, int i,int k);
 void printEdgeHeap(struct gheap * heap);
 void printEdge(struct node * edge);
 
+
+
+#endif

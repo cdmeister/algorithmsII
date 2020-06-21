@@ -1,25 +1,28 @@
 #include "deque.h"
 
-static struct dequeNode * createDequeNode(void * data){
+static struct dequeNode * createDequeNode(void * data,size_t elementSize){
 
   struct dequeNode * temp = (struct dequeNode *)malloc(sizeof(struct dequeNode));
-  temp->data=data;
+  temp->data=(void *) malloc(elementSize);
+  memcpy(temp->data,data,elementSize);
   temp->next=NULL;
   temp->prev= NULL;
   return temp;
 
 }
 
-struct Deque * createDeque(){
+struct Deque * createDeque(size_t elementSize){
   struct Deque * temp = (struct Deque *)malloc(sizeof(struct Deque));
   temp->head=NULL;
   temp->tail=NULL;
+  temp->size=0;
+  temp->elementSize = elementSize;
   return temp;
 }
 
 void push_front(struct Deque * deque, void * data){
 
-  struct dequeNode * temp = createDequeNode(data);
+  struct dequeNode * temp = createDequeNode(data, deque->elementSize);
   temp->next = deque->head;
   if(deque->tail == NULL){
     deque->tail = temp;
@@ -29,6 +32,7 @@ void push_front(struct Deque * deque, void * data){
     deque->head->prev = temp;
     deque->head = temp;
   }
+  deque->size++;
   return;
 }
 void * pop_front(struct Deque * deque){
@@ -47,6 +51,7 @@ void * pop_front(struct Deque * deque){
   }
 
   free(temp);
+  deque->size--;
   return data;
 }
 
@@ -66,7 +71,7 @@ void printDeque(struct Deque * deque){
 
 void push_back(struct Deque * deque, void * data){
 
-  struct dequeNode * temp = createDequeNode(data);
+  struct dequeNode * temp = createDequeNode(data,deque->elementSize);
   temp->prev = deque->tail;
   if(deque->head == NULL){
     deque->tail = temp;
@@ -76,6 +81,8 @@ void push_back(struct Deque * deque, void * data){
     deque->tail->next = temp;
     deque->tail = temp;
   }
+  deque->size++;
+  return;
 
 }
 
@@ -93,6 +100,7 @@ void *  pop_back(struct Deque * deque){
     deque->tail->next=NULL;
   }
   free(temp);
+  deque->size--;
   return data;
 
 
@@ -110,28 +118,30 @@ int isEmpty(struct Deque * deque){
 }
 
 
+int sizeDeque(struct Deque * deque){
+  return deque->size;
+}
+
 /*
 int main(int argc, char ** argv){
 
-  int * a = (int *) malloc(sizeof(int));
-  *a=1;
+  int a=1;
 
-  int * b = (int *) malloc(sizeof(int));
-  *b=2;
+  int b=2;
 
-  int * c = (int *) malloc(sizeof(int));
-  *c=3;
+  int c=3;
 
-  struct Deque * deque =createDeque();
+  struct Deque * deque =createDeque(sizeof(int));
 
-  push_front(deque, c);
+  push_front(deque, &c);
   pop_back(deque);
-  push_front(deque, b);
-  push_front(deque, a);
+  push_front(deque, &b);
+  push_front(deque, &a);
 
 
   printDeque(deque);
-  pop_back(deque);
+  int * temp0=pop_back(deque);
+  printf("returned: %d\n",*temp0);
   printDeque(deque);
   int * temp =(int *)pop_front(deque);
   printf("returned: %d\n",*temp);

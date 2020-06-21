@@ -5,8 +5,9 @@
 
 struct gheap{
   void * array;
+  int capacity;
+  size_t elementSize;
   int num;
-  size_t size;
   int iterator;
   int (*comparator)(struct gheap *,int i ,int k);
 };
@@ -21,5 +22,6 @@ void insertHeap(struct gheap * heap, const void * data);
 void forcedInsertHeap(struct gheap * heap, const void * data);
 void * removeHeap(struct gheap * heap);
 void * getPtr(struct gheap * heap, int i);
+int heapSize(struct gheap * heap);
 
 #endif
