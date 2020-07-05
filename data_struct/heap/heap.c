@@ -29,7 +29,7 @@ void sink(struct binary_heap * heap, int k){
     int j = 2*k+1; //Left child
 
     // compare which child is greater
-    if(heap->comparator(heap,j,j+1) && j<heap->iterator) j++;
+    if(heap->comparator(heap,j,j+1) && j+1<heap->iterator) j++;
 
     // if the child j is less than the parent then we done sinking
     // which means the parent is greater than both children

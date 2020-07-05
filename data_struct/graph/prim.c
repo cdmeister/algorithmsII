@@ -9,9 +9,9 @@ int edgeMin(struct gheap * heap, int i,int k){
 void printEdgeHeap(struct gheap * heap){
 
   int i;
-  for(i=0; i<heapSize1(heap);i++){
+  for(i=0; i<heapSize(heap);i++){
     struct node * temp = (struct node * )(heap->array + i*heap->elementSize);
-    printf("Src: %d\tDest: %d\tWeight: %lf\n",temp->src,temp->dest,temp->weight);
+    printf("i: %d\t Src: %d\tDest: %d\tWeight: %lf\n",i,temp->src,temp->dest,temp->weight);
   }
 
 }
@@ -91,15 +91,10 @@ int main(int argc, char ** argv){
   struct primMST * pmst = InitFilekMST(argv[1]);
 
   visit(pmst,0);
-  printf("Heap size: %d\n", heapSize(pmst->heap));
   while(heapSize1(pmst->heap) != 0){
 
-    printEdgeHeap(pmst->heap);
-    printf("-----------------------------------\n");
-    printf("Remove from Heap\t");
     struct node * edge = (struct node *)removeHeap(pmst->heap);
     printEdge(edge);
-    printf("-----------------------------------\n");
     if(pmst->marked[edge->src]==1 && pmst->marked[edge->dest]==1) continue;
     printf("Add to mst\t");
     printEdge(edge);
