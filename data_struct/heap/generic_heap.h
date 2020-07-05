@@ -23,5 +23,6 @@ void forcedInsertHeap(struct gheap * heap, const void * data);
 void * removeHeap(struct gheap * heap);
 void * getPtr(struct gheap * heap, int i);
 int heapSize(struct gheap * heap);
+int heapSize1(struct gheap * heap);
 
 #endif

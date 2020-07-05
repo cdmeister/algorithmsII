@@ -98,3 +98,10 @@ int heapSize(struct gheap * heap){
   return heap->iterator;
 
 }
+
+int heapSize1(struct gheap * heap){
+
+  return heap->num;
+
+}
+
